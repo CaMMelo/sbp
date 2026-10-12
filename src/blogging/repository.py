@@ -152,6 +152,7 @@ def get_post(path):
             "created_at": post.created_at,
         }
 
+
 def get_readme():
     filepath = settings.repository.path / "README.md"
 

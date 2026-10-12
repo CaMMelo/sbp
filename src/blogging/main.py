@@ -16,19 +16,19 @@ if settings.repository.path.is_dir():
 
 templates = Jinja2Templates(directory=settings.repository.path / "templates")
 templates.env.filters["markdown"] = lambda text: markdown.markdown(
-        text or "",
-        extensions=[
-            "fenced_code",
-            "tables",
-            "codehilite",
-        ],
-        extension_configs={
-            "codehilite": {
-                "css_class": "highlight",
-                "guess_lang": False,
-            }
-        },
-    )
+    text or "",
+    extensions=[
+        "fenced_code",
+        "tables",
+        "codehilite",
+    ],
+    extension_configs={
+        "codehilite": {
+            "css_class": "highlight",
+            "guess_lang": False,
+        }
+    },
+)
 
 
 @router.get("/")
