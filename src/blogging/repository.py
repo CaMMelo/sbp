@@ -152,6 +152,19 @@ def get_post(path):
             "created_at": post.created_at,
         }
 
+def get_readme():
+    filepath = settings.repository.path / "README.md"
+
+    if not filepath.exists():
+        return None
+
+    with filepath.open() as f:
+        body = f.read()
+
+    return {
+        "body": body,
+    }
+
 
 def _get_file_tree(path: Path):
     if path.is_file():

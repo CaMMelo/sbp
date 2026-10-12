@@ -11,6 +11,7 @@ dependencies = [
     "jinja2>=3.1.6",
     "markdown>=3.11",
     "pydantic>=2.14.0",
+    "pygments>=2.21.0",
     "sqlalchemy>=2.1.4",
     "uvicorn>=0.54.0",
 ]

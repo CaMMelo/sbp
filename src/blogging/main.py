@@ -16,14 +16,25 @@ if settings.repository.path.is_dir():
 
 templates = Jinja2Templates(directory=settings.repository.path / "templates")
 templates.env.filters["markdown"] = lambda text: markdown.markdown(
-    text or "",
-    extensions=["fenced_code", "tables"],
-)
+        text or "",
+        extensions=[
+            "fenced_code",
+            "tables",
+            "codehilite",
+        ],
+        extension_configs={
+            "codehilite": {
+                "css_class": "highlight",
+                "guess_lang": False,
+            }
+        },
+    )
 
 
 @router.get("/")
-def home():
-    return "Welcome!"
+def home(request: Request):
+    context = {"post": repository.get_readme(), "tree": repository.get_tree()}
+    return templates.TemplateResponse(request=request, name="index.jinja", context=context)
 
 
 @router.get("/{path:path}")
@@ -32,7 +43,7 @@ def home(request: Request, path: str):
     if post is None:
         raise HTTPException(status_code=404, detail="Not found")
     context = {"post": post, "tree": repository.get_tree()}
-    return templates.TemplateResponse(request=request, name="index.jinja", context=context)
+    return templates.TemplateResponse(request=request, name="post.jinja", context=context)
 
 
 @router.post("/api/sync")

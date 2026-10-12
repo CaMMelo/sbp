@@ -44,6 +44,7 @@ dependencies = [
     { name = "jinja2" },
     { name = "markdown" },
     { name = "pydantic" },
+    { name = "pygments" },
     { name = "sqlalchemy" },
     { name = "uvicorn" },
 ]
@@ -62,6 +63,7 @@ requires-dist = [
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "markdown", specifier = ">=3.11" },
     { name = "pydantic", specifier = ">=2.14.0" },
+    { name = "pygments", specifier = ">=2.21.0" },
     { name = "sqlalchemy", specifier = ">=2.1.4" },
     { name = "uvicorn", specifier = ">=0.54.0" },
 ]
