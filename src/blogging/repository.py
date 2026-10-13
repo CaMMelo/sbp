@@ -10,6 +10,9 @@ from blogging.config import settings
 from blogging.database import session_factory
 from blogging.models import Head, Post
 
+from blogging.logs import logger
+
+
 
 def _get_filetree(path: Path):
     if path.is_file():
@@ -97,6 +100,7 @@ class Repository:
     }
 
     def sync_head(self, session):
+        logger.info("sync head started")
         head = session.get(Head, 1)
         current_hash = self._repo.head.commit.hexsha
 
@@ -105,17 +109,23 @@ class Repository:
             session.add(head)
         elif head.hash != current_hash:
             head.hash = current_hash
+        logger.info("sync head finished")
 
     def sync_posts(self, session):
+        logger.info("sync posts started")
         changes = self.__changed_files(session)
         for operation, a_path, b_path in changes:
             fn = self.operation_map.get(operation, lambda ap, bp, s: ...)
             fn(self, a_path, b_path, session)
+        logger.info("sync posts finished")
 
     def sync_filetree(self):
+        logger.info("sync filetree started")
         self._filetree = _get_filetree(settings.repository.path / "public")
+        logger.info("sync filetree finished")
 
     def sync(self):
+        logger.info("sync started")
         with session_factory.begin() as session:
             origin = self._repo.remote(name="origin")
             origin.pull()
@@ -125,9 +135,11 @@ class Repository:
                 self.sync_head(session)
                 self.sync_filetree()
 
+            logger.info("commit db.sqlite")
             self._repo.index.add(["db.sqlite"])
             self._repo.index.commit("blog: sync")
             origin.push()
+        logger.info("sync finished")
 
     def get_post(self, path):
         path = Path("public") / f"{path}.md"
