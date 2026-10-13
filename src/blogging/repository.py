@@ -8,10 +8,8 @@ import sqlalchemy as sa
 
 from blogging.config import settings
 from blogging.database import session_factory
-from blogging.models import Head, Post
-
 from blogging.logs import logger
-
+from blogging.models import Head, Post
 
 
 def _get_filetree(path: Path):
