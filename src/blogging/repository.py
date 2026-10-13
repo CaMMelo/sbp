@@ -135,10 +135,11 @@ class Repository:
                 self.sync_head(session)
                 self.sync_filetree()
 
-            logger.info("commit db.sqlite")
-            self._repo.index.add(["db.sqlite"])
-            self._repo.index.commit("blog: sync")
-            origin.push()
+        logger.info("commit db.sqlite")
+        self._repo.index.add(["db.sqlite"])
+        self._repo.index.commit("blog: sync")
+        origin.push()
+
         logger.info("sync finished")
 
     def get_post(self, path):
