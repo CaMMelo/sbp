@@ -123,7 +123,7 @@ class Repository:
             if self.__has_updates(session):
                 self.sync_posts(session)
                 self.sync_head(session)
-                self.sync_filetree(session)
+                self.sync_filetree()
 
             self._repo.index.add(["db.sqlite"])
             self._repo.index.commit("blog: sync")
