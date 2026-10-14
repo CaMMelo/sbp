@@ -1,4 +1,4 @@
-# SBP - Simple Blogging Tool
+# SBP - Simple Blogging Publishing
 
 SBP is a simple tool to serve git repositories as blogs. It can automatically update the posts on push to the main branch and it keeps metada infos about the posts in a simple sqlite3 database that is automatically pushed to the repository when the server syncs with the repository.
 
