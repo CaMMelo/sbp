@@ -14,8 +14,14 @@ from blogging.models import Head, Post
 
 def _get_filetree(path: Path):
     if path.is_file():
+        if path.suffix != ".md":
+            return None
         return {"type": "file", "path": str(path.relative_to(settings.repository.path / "public")).removesuffix(".md")}
-    return {"type": "directory", "name": path.name, "children": [_get_filetree(child) for child in path.iterdir()]}
+    return {
+        "type": "directory",
+        "name": path.name,
+        "children": [_get_filetree(child) for child in path.iterdir() if child],
+    }
 
 
 class Repository:
@@ -85,7 +91,7 @@ class Repository:
         post = session.scalar(sa.select(Post).where(Post.path == a_path))
 
         if post is None:
-            self.create_post(a_path, session)
+            self.create_post(a_path, None, session)
             return
 
         filepath = settings.repository.path / a_path
