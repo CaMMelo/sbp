@@ -2,7 +2,7 @@ import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from blogging.config import settings
+from sbp.config import settings
 
 Base = sqlalchemy.orm.declarative_base()
 

@@ -1,8 +1,8 @@
 import git
 
-from blogging import models, repository
-from blogging.config import settings
-from blogging.database import Base, engine
+from sbp import models, repository
+from sbp.config import settings
+from sbp.database import Base, engine
 
 
 def main():

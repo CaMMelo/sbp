@@ -6,8 +6,8 @@ from fastapi.background import BackgroundTasks
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from blogging import repository
-from blogging.config import settings
+from sbp import repository
+from sbp.config import settings
 
 router = APIRouter()
 

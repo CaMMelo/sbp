@@ -6,10 +6,10 @@ from pathlib import Path
 import git
 import sqlalchemy as sa
 
-from blogging.config import settings
-from blogging.database import session_factory
-from blogging.logs import logger
-from blogging.models import Head, Post
+from sbp.config import settings
+from sbp.database import session_factory
+from sbp.logs import logger
+from sbp.models import Head, Post
 
 
 def _get_filetree(path: Path):
