@@ -4,6 +4,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from blogging.main import router
+from blogging.config import settings
 
 
 @asynccontextmanager

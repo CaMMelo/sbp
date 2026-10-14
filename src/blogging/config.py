@@ -10,5 +10,6 @@ settings = Dynaconf(
         Validator("repository.url", must_exist=True, ne=None),
         Validator("repository.path", default="blog", cast=Path),
         Validator("api.token", must_exist=True, cast=lambda x: str.encode(x, "utf-8")),
+        Validator("server.port", default=8080),
     ],
 )
