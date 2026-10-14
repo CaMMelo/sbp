@@ -14,7 +14,7 @@ from blogging.models import Head, Post
 
 def _get_filetree(path: Path):
     if path.is_file():
-        return {"type": "post", "path": str(path.relative_to(settings.repository.path / "public")).removesuffix(".md")}
+        return {"type": "file", "path": str(path.relative_to(settings.repository.path / "public")).removesuffix(".md")}
     return {"type": "directory", "name": path.name, "children": [_get_filetree(child) for child in path.iterdir()]}
 
 
