@@ -20,8 +20,20 @@ def _get_filetree(path: Path):
 
 class Repository:
     def __init__(self):
-        self._repo = git.Repo(settings.repository.path)
-        self._filetree = _get_filetree(settings.repository.path / "public")
+        self._repo = None
+        self._filetree = None
+
+    @property
+    def repo(self):
+        if self._repo is None:
+            self._repo = git.Repo(settings.repository.path)
+        return self._repo
+
+    @property
+    def filetree(self):
+        if self._filetree is None:
+            self._filetree = _get_filetree(settings.repository.path / "public")
+        return self._filetree
 
     def __changed_files(self, session):
         head = session.get(Head, 1)
@@ -32,8 +44,8 @@ class Repository:
                 for path in (settings.repository.path / "public").rglob("*.md")
             ]
 
-        old_commit = self._repo.commit(head.hash)
-        new_commit = self._repo.head.commit
+        old_commit = self.repo.commit(head.hash)
+        new_commit = self.repo.head.commit
 
         diff = old_commit.diff(new_commit)
 
@@ -45,7 +57,7 @@ class Repository:
 
     def __has_updates(self, session):
         head = session.get(Head, 1)
-        current_hash = self._repo.head.commit.hexsha
+        current_hash = self.repo.head.commit.hexsha
         return head is None or head.hash != current_hash
 
     def create_post(self, a_path, b_path, session):
@@ -57,8 +69,8 @@ class Repository:
         post = Post(
             path=a_path,
             title=title,
-            created_by=self._repo.head.commit.author.name,
-            updated_by=self._repo.head.commit.author.name,
+            created_by=self.repo.head.commit.author.name,
+            updated_by=self.repo.head.commit.author.name,
             content_hash=content_hash,
             updated_at=datetime.now(timezone.utc),
         )
@@ -100,7 +112,7 @@ class Repository:
     def sync_head(self, session):
         logger.info("sync head started")
         head = session.get(Head, 1)
-        current_hash = self._repo.head.commit.hexsha
+        current_hash = self.repo.head.commit.hexsha
 
         if head is None:
             head = Head(id=1, hash=current_hash)
@@ -125,7 +137,7 @@ class Repository:
     def sync(self):
         logger.info("sync started")
         with session_factory.begin() as session:
-            origin = self._repo.remote(name="origin")
+            origin = self.repo.remote(name="origin")
             origin.pull()
 
             if self.__has_updates(session):
@@ -134,8 +146,8 @@ class Repository:
                 self.sync_filetree()
 
         logger.info("commit db.sqlite")
-        self._repo.index.add(["db.sqlite"])
-        self._repo.index.commit("blog: sync")
+        self.repo.index.add(["db.sqlite"])
+        self.repo.index.commit("blog: sync")
         origin.push()
 
         logger.info("sync finished")
@@ -173,11 +185,8 @@ class Repository:
             "body": body,
         }
 
-    def get_tree(self):
-        return self._filetree
 
-
-instance = Repository()
+_instance = Repository()
 _sync_lock = threading.Lock()
 
 
@@ -186,17 +195,17 @@ def clone():
 
 
 def get_readme():
-    return instance.get_readme()
+    return _instance.get_readme()
 
 
 def get_tree():
-    return instance.get_tree()
+    return _instance.filetree
 
 
 def get_post(path):
-    return instance.get_post(path)
+    return _instance.get_post(path)
 
 
 def sync():
     with _sync_lock:
-        return instance.sync()
+        return _instance.sync()

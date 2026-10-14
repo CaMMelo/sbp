@@ -3,8 +3,8 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 
-from blogging.main import router
 from blogging.config import settings
+from blogging.main import router
 
 
 @asynccontextmanager
