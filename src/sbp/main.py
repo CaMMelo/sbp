@@ -14,7 +14,9 @@ router = APIRouter()
 if settings.repository.path.is_dir():
     router.mount("/static", StaticFiles(directory=settings.repository.path / "static"), name="static")
 
-templates = Jinja2Templates(directory=settings.repository.path / "templates")
+templates_dir = settings.repository.path / "templates"
+if templates_dir.is_dir():
+    templates = Jinja2Templates(directory=templates_dir)
 templates.env.filters["markdown"] = lambda text: markdown.markdown(
     text or "",
     extensions=[
