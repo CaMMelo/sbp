@@ -13,8 +13,10 @@ from sbp.models import Head, Post
 
 
 def _get_filetree(path: Path):
+    if path.name.startswith("."):
+        return None
     if path.is_file():
-        if path.suffix != ".md" or path.name.startswith("."):
+        if path.suffix != ".md":
             return None
         return {"type": "file", "path": str(path.relative_to(settings.repository.path / "public")).removesuffix(".md")}
     return {
