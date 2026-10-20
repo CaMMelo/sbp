@@ -6,6 +6,7 @@ from pathlib import Path
 import git
 import sqlalchemy as sa
 
+from sbp import markdown
 from sbp.config import settings
 from sbp.database import session_factory
 from sbp.logs import logger
@@ -175,7 +176,8 @@ class Repository:
 
             return {
                 "title": post.title,
-                "body": body,
+                "body": markdown.md.convert(body),
+                "toc": markdown.md.toc_tokens,
                 "created_by": post.created_by,
                 "created_at": post.created_at,
             }
@@ -190,7 +192,8 @@ class Repository:
             body = f.read()
 
         return {
-            "body": body,
+            "body": markdown.md.convert(body),
+            "toc": markdown.md.toc_tokens,
         }
 
 
